@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+select(STDOUT); $| = 1;
+select(STDERR); $| = 1;
+select(STDOUT);
+
+my $el = `tput el`;             # clr_eol
+
+my @r;
+foreach my $arg (@ARGV) {
+    push(@r, qr{$arg});
+}
+
+while (<STDIN>) {
+    print;
+    chomp();
+    foreach my $r (@r) {
+        if ($_ =~ $r) {
+            print STDERR ($_, $el, "\r");
+            last;
+        }
+    }
+}
+
+print STDERR "\n";
+
