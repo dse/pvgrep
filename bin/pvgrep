@@ -6,7 +6,7 @@ select(STDOUT); $| = 1;         # autoflush STDOUT
 select(STDERR); $| = 1;         # autoflush STDERR
 select(STDOUT);
 
-my $clr_to_eol = `tput el`;     # clr_eol
+my $clear_to_eol = `tput el`;   # clr_eol; see terminfo(5)
 
 my @regex;
 foreach my $arg (@ARGV) {
@@ -18,7 +18,7 @@ while (defined(my $line = <STDIN>)) {
     chomp($line);
     foreach my $regex (@regex) {
         if ($line =~ $regex) {
-            print STDERR ($line, $clr_to_eol, "\r");
+            print STDERR ($line, $clear_to_eol, "\r");
             last;
         }
     }
