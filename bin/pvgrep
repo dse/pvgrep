@@ -2,23 +2,23 @@
 use warnings;
 use strict;
 
-select(STDOUT); $| = 1;
-select(STDERR); $| = 1;
+select(STDOUT); $| = 1;         # autoflush STDOUT
+select(STDERR); $| = 1;         # autoflush STDERR
 select(STDOUT);
 
-my $el = `tput el`;             # clr_eol
+my $clr_to_eol = `tput el`;     # clr_eol
 
-my @r;
+my @regex;
 foreach my $arg (@ARGV) {
-    push(@r, qr{$arg});
+    push(@regex, qr{$arg});
 }
 
-while (<STDIN>) {
-    print;
-    chomp();
-    foreach my $r (@r) {
-        if ($_ =~ $r) {
-            print STDERR ($_, $el, "\r");
+while (defined(my $line = <STDIN>)) {
+    print($line);
+    chomp($line);
+    foreach my $regex (@regex) {
+        if ($line =~ $regex) {
+            print STDERR ($line, $clr_to_eol, "\r");
             last;
         }
     }
